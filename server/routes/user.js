@@ -3,13 +3,15 @@ const app = express()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
+const { verificaToken } = require('../middlewares/authentication')
+const { verificaAdmin } = require('../middlewares/authentication')
 
 
 app.get('/', function(req, res) {
     res.send('Hello World rest server')
 })
 
-app.get('/users', (req, res) => {
+app.get('/users', verificaToken, (req, res) => {
     let desde = Number(req.query.desde) || 0
     let limite = Number(req.query.limite) || 5
     User.find({ status: true }).skip(desde).limit(limite).exec((err, users) => {
@@ -32,7 +34,7 @@ app.get('/users', (req, res) => {
     })
 })
 
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', [verificaToken, verificaAdmin], (req, res) => {
     let id = req.params.id
 
     // User.findByIdAndDelete(id, (err, userDeleted) => {
@@ -82,7 +84,7 @@ app.delete('/user/:id', (req, res) => {
     })
 })
 
-app.post('/user', function(req, res) {
+app.post('/user', [verificaToken, verificaAdmin], function(req, res) {
     let body = req.body;
 
     let user = new User({
@@ -107,7 +109,7 @@ app.post('/user', function(req, res) {
     })
 })
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', [verificaToken, verificaAdmin], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'status'])
 
