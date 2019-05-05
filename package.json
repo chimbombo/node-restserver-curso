@@ -13,6 +13,7 @@
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "express-fileupload": "^1.1.4",
     "google-auth-library": "^3.1.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.4.19",
